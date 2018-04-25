@@ -10,23 +10,40 @@ CLIENT_SECRET = os.environ['CLIENT_SECRET']
 REDIRECT_URI = 'https://localhost:5000/callback'
 authorization_base_url = 'https://api.pinterest.com/v1/'
 token_url = 'https://api.pinterest.com/v1/oauth/token'
+scope = 'read_public'
 
+
+def get_pins():
+    request_str = "https://api.pinterest.com/v3/pidgets/users/jessieleng/pins/"
+    r = requests.get(request_str)
+    user_pins = r.json()
+
+    return user_pins
 
 @app.route('/')
 def homepage():
 
-    return '<form action="/login"> <input type=submit>Get your pinterest boards here! />'
+    return '<form action="/login" method="POST"> <button type="submit">Get your pinterest boards here! </button></form>'
 
 
-@app.route('/login')
+@app.route('/login', methods=['POST'])
 def login():
 
-    authorization_url = 'https://api.pinterest.com/oauth/?response_type=code&redirect_uri={}&client_id={}&scope=read_public&state=123hjkl'.format(REDIRECT_URI, CLIENT_ID)
-    return redirect(authorization_url)
+    user_pins = get_pins()
+
+    print user_pins
+
+    return 'made it'
+
+    # authorization_url = 'https://api.pinterest.com/oauth/?response_type=code&redirect_uri={}&client_id={}&scope=read_public&state=768uyFys'.format(REDIRECT_URI, CLIENT_ID)
+    # print authorization_url
+    # return redirect(authorization_url)
 
 
-@app.route('/callback')
+@app.route('/callback', methods=['POST'])
 def callback():
+
+    print 'made it'
 
     import pdb; pdb.set_trace()
 
